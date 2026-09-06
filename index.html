@@ -12,6 +12,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+/* Set dir/lang from a saved preference before first paint, so returning
+   English-preferring visitors don't see a flash of RTL Arabic layout. */
+(function(){
+  try{
+    var saved = localStorage.getItem('webrew-lang');
+    if(saved === 'en'){
+      document.documentElement.lang = 'en';
+      document.documentElement.dir = 'ltr';
+    }
+  }catch(e){}
+})();
+</script>
 <style>
 :root{
   --dark-roast:#4E3629; --orange:#FF7F41; --orange-hover:#E86F30;
@@ -67,7 +80,7 @@ section{padding-block:clamp(56px,8vw,104px)}
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   border-bottom:1px solid var(--border-subtle);
 }
-.site-header .wrap{display:flex;align-items:center;justify-content:space-between;height:66px}
+.site-header .wrap{display:flex;align-items:center;justify-content:space-between;height:66px;gap:16px}
 .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px}
 .brand .mark{
   width:34px;height:34px;border-radius:9px;background:var(--dark-roast);color:var(--vanilla);
@@ -77,7 +90,22 @@ section{padding-block:clamp(56px,8vw,104px)}
 .nav-links a{color:var(--text-secondary)}
 .nav-links a:hover{color:var(--text-primary)}
 .site-header .btn{padding:10px 20px;font-size:14px}
+.header-actions{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.lang-toggle{
+  font-family:inherit;font-size:13px;font-weight:700;letter-spacing:.03em;
+  padding:9px 16px;border-radius:var(--radius-pill);border:1px solid var(--border-subtle);
+  background:var(--bg-surface);color:var(--text-primary);cursor:pointer;
+  transition:background .15s ease,box-shadow .15s ease;white-space:nowrap;
+}
+.lang-toggle:hover{background:var(--bg-tint);box-shadow:var(--shadow-sm)}
 @media(max-width:860px){.nav-links{display:none}}
+@media(max-width:420px){
+  .site-header .wrap{gap:8px}
+  .brand span:not(.mark){display:none}
+  .header-actions{gap:6px}
+  .lang-toggle{padding:8px 12px;font-size:12px}
+  .site-header .btn{padding:9px 14px;font-size:13px}
+}
 
 /* hero */
 .hero{position:relative;background:var(--bg-inverse);color:var(--text-inverse);overflow:hidden}
@@ -200,13 +228,16 @@ form.sent .form-success{display:block}
 
 <header class="site-header">
   <div class="wrap">
-    <a href="#top" class="brand"><span class="mark">W</span> ويبرو</a>
+    <a href="#top" class="brand"><span class="mark">W</span> <span data-i18n="brand">ويبرو</span></a>
     <nav class="nav-links">
-      <a href="#about">عن ويبرو</a>
-      <a href="#why">لماذا الامتياز</a>
-      <a href="#process">الخطوات</a>
+      <a href="#about" data-i18n="nav-about">عن ويبرو</a>
+      <a href="#why" data-i18n="nav-why">لماذا الامتياز</a>
+      <a href="#process" data-i18n="nav-process">الخطوات</a>
     </nav>
-    <a href="#apply" class="btn btn--primary">قدّم الآن</a>
+    <div class="header-actions">
+      <button type="button" id="lang-toggle" class="lang-toggle" aria-label="Switch language">English</button>
+      <a href="#apply" class="btn btn--primary" data-i18n="apply-now">قدّم الآن</a>
+    </div>
   </div>
 </header>
 
@@ -216,71 +247,71 @@ form.sent .form-success{display:block}
   <section class="hero" id="apply">
     <div class="wrap">
       <div class="hero-copy reveal">
-        <span class="eyebrow">فرصة امتياز — المملكة العربية السعودية</span>
-        <h1>افتح فرعك الخاص من محمصة ومقهى ويبرو</h1>
-        <p class="lede">محمصة قهوة متخصصة من الخبر، تورّد أكثر من 60 طنًا من البن المحمّص سنويًا لأكثر من 45 مقهى. الآن نفتح باب الامتياز: علامة جاهزة، محمصة داخلية، ونموذج تشغيلي مجرّب.</p>
+        <span class="eyebrow" data-i18n="hero-eyebrow">فرصة امتياز — المملكة العربية السعودية</span>
+        <h1 data-i18n="hero-h1">افتح فرعك الخاص من محمصة ومقهى ويبرو</h1>
+        <p class="lede" data-i18n="hero-lede">محمصة قهوة متخصصة من الخبر، تورّد أكثر من 60 طنًا من البن المحمّص سنويًا لأكثر من 45 مقهى. الآن نفتح باب الامتياز: علامة جاهزة، محمصة داخلية، ونموذج تشغيلي مجرّب.</p>
         <div class="hero-stats">
-          <div><div class="n">+60</div><div class="l">طن بن محمّص سنويًا</div></div>
-          <div><div class="n">45</div><div class="l">مقهى وشريك</div></div>
-          <div><div class="n">+300,000</div><div class="l">عميل منذ 2020</div></div>
-          <div><div class="n">15</div><div class="l">نوع بن في القائمة</div></div>
+          <div><div class="n">+60</div><div class="l" data-i18n="stat-1">طن بن محمّص سنويًا</div></div>
+          <div><div class="n">45</div><div class="l" data-i18n="stat-2">مقهى وشريك</div></div>
+          <div><div class="n">+300,000</div><div class="l" data-i18n="stat-3">عميل منذ 2020</div></div>
+          <div><div class="n">15</div><div class="l" data-i18n="stat-4">نوع بن في القائمة</div></div>
         </div>
       </div>
 
       <div class="lead-card reveal">
-        <h2>قدّم طلب الامتياز</h2>
-        <p class="hint">يتواصل معك فريق الامتياز خلال 48 ساعة عمل بالملف التعريفي والخطوات التالية. جميع الطلبات تُدرس بسرّية.</p>
+        <h2 data-i18n="form-h2">قدّم طلب الامتياز</h2>
+        <p class="hint" data-i18n="form-hint">يتواصل معك فريق الامتياز خلال 48 ساعة عمل بالملف التعريفي والخطوات التالية. جميع الطلبات تُدرس بسرّية.</p>
         <form id="franchise-form" novalidate>
           <div class="form-body">
             <div class="field">
-              <label for="f-name">الاسم الكامل</label>
-              <input type="text" id="f-name" name="name" autocomplete="name" placeholder="مثال: عبدالله الشمري" required>
-              <span class="err">فضلاً اكتب اسمك الكامل.</span>
+              <label for="f-name" data-i18n="label-name">الاسم الكامل</label>
+              <input type="text" id="f-name" name="name" autocomplete="name" placeholder="مثال: عبدالله الشمري" data-i18n-ph="ph-name" required>
+              <span class="err" data-i18n="err-name">فضلاً اكتب اسمك الكامل.</span>
             </div>
             <div class="field">
-              <label for="f-phone">رقم الجوال</label>
+              <label for="f-phone" data-i18n="label-phone">رقم الجوال</label>
               <input type="tel" id="f-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="05X XXX XXXX" required>
-              <span class="err">فضلاً اكتب رقم جوال صحيح.</span>
+              <span class="err" data-i18n="err-phone">فضلاً اكتب رقم جوال صحيح.</span>
             </div>
             <div class="field">
-              <label for="f-city">المدينة</label>
-              <input type="text" id="f-city" name="city" placeholder="مثال: الخبر" required>
-              <span class="err">فضلاً اكتب مدينتك.</span>
+              <label for="f-city" data-i18n="label-city">المدينة</label>
+              <input type="text" id="f-city" name="city" placeholder="مثال: الخبر" data-i18n-ph="ph-city" required>
+              <span class="err" data-i18n="err-city">فضلاً اكتب مدينتك.</span>
             </div>
             <div class="field">
-              <label for="f-budget">نطاق الاستثمار المتاح</label>
+              <label for="f-budget" data-i18n="label-budget">نطاق الاستثمار المتاح</label>
               <select id="f-budget" name="budget" required>
-                <option value="">اختر نطاق الاستثمار</option>
-                <option>أقل من 850,000 ريال</option>
-                <option>850,000 – 1,200,000 ريال</option>
-                <option>1,200,000 – 2,000,000 ريال</option>
-                <option>أكثر من 2,000,000 ريال</option>
+                <option value="" data-i18n="opt-select">اختر نطاق الاستثمار</option>
+                <option data-i18n="opt-1">أقل من 850,000 ريال</option>
+                <option data-i18n="opt-2">850,000 – 1,200,000 ريال</option>
+                <option data-i18n="opt-3">1,200,000 – 2,000,000 ريال</option>
+                <option data-i18n="opt-4">أكثر من 2,000,000 ريال</option>
               </select>
-              <span class="err">فضلاً اختر نطاق الاستثمار.</span>
+              <span class="err" data-i18n="err-budget">فضلاً اختر نطاق الاستثمار.</span>
             </div>
 
-            <button type="button" class="more-toggle" aria-expanded="false" data-more>+ إضافة بريد إلكتروني ورسالة (اختياري)</button>
+            <button type="button" class="more-toggle" aria-expanded="false" data-more data-i18n="more-open">+ إضافة بريد إلكتروني ورسالة (اختياري)</button>
             <div class="more-fields" hidden>
               <div class="field">
-                <label for="f-email">البريد الإلكتروني</label>
+                <label for="f-email" data-i18n="label-email">البريد الإلكتروني</label>
                 <input type="email" id="f-email" name="email" autocomplete="email" placeholder="name@email.com">
               </div>
               <div class="field">
-                <label for="f-message">رسالتك</label>
-                <textarea id="f-message" name="message" placeholder="أخبرنا عن خبرتك والموقع الذي تفكر فيه"></textarea>
+                <label for="f-message" data-i18n="label-message">رسالتك</label>
+                <textarea id="f-message" name="message" placeholder="أخبرنا عن خبرتك والموقع الذي تفكر فيه" data-i18n-ph="ph-message"></textarea>
               </div>
             </div>
 
             <input type="text" class="hp" name="company" tabindex="-1" autocomplete="off" aria-hidden="true">
 
-            <button type="submit" class="btn btn--primary btn--block">إرسال الطلب</button>
-            <p class="form-note">بإرسال الطلب توافق على تواصل فريق ويبرو معك بشأن فرصة الامتياز.</p>
+            <button type="submit" class="btn btn--primary btn--block" data-i18n="submit-app">إرسال الطلب</button>
+            <p class="form-note" data-i18n="form-note">بإرسال الطلب توافق على تواصل فريق ويبرو معك بشأن فرصة الامتياز.</p>
           </div>
 
           <div class="form-success">
             <div class="tick">✓</div>
-            <h3>استلمنا طلبك</h3>
-            <p>يوصلك الملف التعريفي والخطوات التالية من فريق الامتياز خلال 48 ساعة عمل. لأي استفسار عاجل: franchise@webrewroasters.com</p>
+            <h3 data-i18n="success-h3">استلمنا طلبك</h3>
+            <p data-i18n="success-p">يوصلك الملف التعريفي والخطوات التالية من فريق الامتياز خلال 48 ساعة عمل. لأي استفسار عاجل: franchise@webrewroasters.com</p>
           </div>
         </form>
       </div>
@@ -291,22 +322,22 @@ form.sent .form-success{display:block}
   <section class="about" id="about">
     <div class="wrap">
       <div class="reveal">
-        <span class="eyebrow">عن ويبرو</span>
-        <h2 style="font-size:clamp(24px,3.6vw,34px)">محمصتك المحلية، من الحبة إلى الكوب</h2>
-        <p style="margin-top:14px;color:var(--text-secondary);font-size:16px">
+        <span class="eyebrow" data-i18n="about-eyebrow">عن ويبرو</span>
+        <h2 style="font-size:clamp(24px,3.6vw,34px)" data-i18n="about-h2">محمصتك المحلية، من الحبة إلى الكوب</h2>
+        <p style="margin-top:14px;color:var(--text-secondary);font-size:16px" data-i18n="about-p">
           تأسست محمصة ويبرو في الخبر عام 2020 لتقديم بن محمّص طازج من الدرجة الأولى لمقاهي السعودية والخليج.
           نحمّص كل أصل ببروفايل مدروس يُبرز نكهته، ونعمل مع المزارعين بشكل مسؤول يدعم استدامة صناعة القهوة.
         </p>
         <div class="chips">
-          <span class="chip">محمصة داخلية</span>
-          <span class="chip">جودة وأصالة</span>
-          <span class="chip">تحميص على الطلب</span>
+          <span class="chip" data-i18n="chip-1">محمصة داخلية</span>
+          <span class="chip" data-i18n="chip-2">جودة وأصالة</span>
+          <span class="chip" data-i18n="chip-3">تحميص على الطلب</span>
         </div>
       </div>
       <div class="media reveal" data-media>
-        <img src="assets/roastery.jpg" alt="محمصة ويبرو في الخبر"
+        <img src="assets/roastery.jpg" alt="محمصة ويبرو في الخبر" data-i18n-alt="about-img-alt"
              onerror="this.closest('.media').classList.add('media--empty');this.remove();">
-        <span hidden>أضف صورة للمحمصة في assets/roastery.jpg</span>
+        <span hidden data-i18n="about-img-fallback">أضف صورة للمحمصة في assets/roastery.jpg</span>
       </div>
     </div>
   </section>
@@ -315,24 +346,24 @@ form.sent .form-success{display:block}
   <section id="why">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="eyebrow">لماذا الامتياز معنا</span>
-        <h2>لا تبدأ من الصفر — ابدأ من نموذج يعمل</h2>
+        <span class="eyebrow" data-i18n="why-eyebrow">لماذا الامتياز معنا</span>
+        <h2 data-i18n="why-h2">لا تبدأ من الصفر — ابدأ من نموذج يعمل</h2>
       </div>
       <div class="grid cols-3">
-        <div class="card reveal"><div class="num">01</div><h3>علامة راسخة</h3>
-          <p>هوية بصرية كاملة وسمعة بُنيت مع 45 شريكًا وأكثر من 300 ألف عميل، مع حقوق استخدام العلامة والاسم التجاري.</p></div>
-        <div class="card reveal"><div class="num">02</div><h3>تدريب ودعم مستمر</h3>
-          <p>أسبوعان تدريب مباشر لصاحب الامتياز و4–6 أسابيع للمدربين، ونقل كامل للمعرفة التشغيلية طوال مدة العقد.</p></div>
-        <div class="card reveal"><div class="num">03</div><h3>محمصة وسلسلة توريد جاهزة</h3>
-          <p>وصول مباشر إلى محمصتنا و15 نوعًا من البن ببروفايلات ويبرو الحصرية، بجدول تحميص وتوريد منتظم.</p></div>
-        <div class="card reveal"><div class="num">04</div><h3>دعم تسويقي</h3>
-          <p>حملات على قنوات ويبرو، مواد ترويجية رقمية ومطبوعة، وخطط افتتاح وشراكات وفعاليات محلية.</p></div>
-        <div class="card reveal"><div class="num">05</div><h3>نموذج عمل مجرّب</h3>
-          <p>أدلة تشغيل SOP كاملة، مخططات الفرع والتصاميم المعمارية، تقييم الموقع، ونموذج مالي واضح لثلاث سنوات.</p></div>
+        <div class="card reveal"><div class="num">01</div><h3 data-i18n="why-1-h">علامة راسخة</h3>
+          <p data-i18n="why-1-p">هوية بصرية كاملة وسمعة بُنيت مع 45 شريكًا وأكثر من 300 ألف عميل، مع حقوق استخدام العلامة والاسم التجاري.</p></div>
+        <div class="card reveal"><div class="num">02</div><h3 data-i18n="why-2-h">تدريب ودعم مستمر</h3>
+          <p data-i18n="why-2-p">أسبوعان تدريب مباشر لصاحب الامتياز و4–6 أسابيع للمدربين، ونقل كامل للمعرفة التشغيلية طوال مدة العقد.</p></div>
+        <div class="card reveal"><div class="num">03</div><h3 data-i18n="why-3-h">محمصة وسلسلة توريد جاهزة</h3>
+          <p data-i18n="why-3-p">وصول مباشر إلى محمصتنا و15 نوعًا من البن ببروفايلات ويبرو الحصرية، بجدول تحميص وتوريد منتظم.</p></div>
+        <div class="card reveal"><div class="num">04</div><h3 data-i18n="why-4-h">دعم تسويقي</h3>
+          <p data-i18n="why-4-p">حملات على قنوات ويبرو، مواد ترويجية رقمية ومطبوعة، وخطط افتتاح وشراكات وفعاليات محلية.</p></div>
+        <div class="card reveal"><div class="num">05</div><h3 data-i18n="why-5-h">نموذج عمل مجرّب</h3>
+          <p data-i18n="why-5-p">أدلة تشغيل SOP كاملة، مخططات الفرع والتصاميم المعمارية، تقييم الموقع، ونموذج مالي واضح لثلاث سنوات.</p></div>
         <div class="card reveal" style="background:var(--bg-tint);border-color:transparent">
-          <div class="num">وحدة واحدة أو أكثر</div>
-          <p style="margin-top:10px">تتوفر فرصتا امتياز: الوحدة الواحدة، ومتعدد الفروع. يُطلب من صاحب الامتياز تأسيس شركة ذات مسؤولية محدودة وفق أنظمة المملكة.</p>
-          <a href="#apply" class="btn btn--ghost" style="margin-top:14px">تحدّث إلى فريق الامتياز</a>
+          <div class="num" data-i18n="why-6-h">وحدة واحدة أو أكثر</div>
+          <p style="margin-top:10px" data-i18n="why-6-p">تتوفر فرصتا امتياز: الوحدة الواحدة، ومتعدد الفروع. يُطلب من صاحب الامتياز تأسيس شركة ذات مسؤولية محدودة وفق أنظمة المملكة.</p>
+          <a href="#apply" class="btn btn--ghost" style="margin-top:14px" data-i18n="why-6-btn">تحدّث إلى فريق الامتياز</a>
         </div>
       </div>
     </div>
@@ -342,14 +373,14 @@ form.sent .form-success{display:block}
   <section id="process">
     <div class="wrap">
       <div class="section-head reveal">
-        <span class="eyebrow">الخطوات</span>
-        <h2>من التقديم إلى الافتتاح في أربع خطوات</h2>
+        <span class="eyebrow" data-i18n="process-eyebrow">الخطوات</span>
+        <h2 data-i18n="process-h2">من التقديم إلى الافتتاح في أربع خطوات</h2>
       </div>
       <div class="grid cols-4">
-        <div class="step reveal"><div class="s">01</div><h3>التقديم</h3><p>املأ النموذج بمدينتك ونطاق الاستثمار، ونرسل لك الملف التعريفي للامتياز.</p></div>
-        <div class="step reveal"><div class="s">02</div><h3>الدراسة والمقابلة</h3><p>مقابلة مع الفريق، دراسة الملاءة المالية، تقييم الموقع المقترح، ثم توقيع العقد لثلاث سنوات.</p></div>
-        <div class="step reveal"><div class="s">03</div><h3>التدريب والتجهيز</h3><p>تدريب صاحب الامتياز والمدربين بالتوازي مع التصميم والتجهيز وفق مخططات ويبرو.</p></div>
-        <div class="step reveal"><div class="s">04</div><h3>الافتتاح</h3><p>حملة افتتاح مشتركة، أول توريد من المحمصة، ودعم ميداني في الأسابيع الأولى.</p></div>
+        <div class="step reveal"><div class="s">01</div><h3 data-i18n="step-1-h">التقديم</h3><p data-i18n="step-1-p">املأ النموذج بمدينتك ونطاق الاستثمار، ونرسل لك الملف التعريفي للامتياز.</p></div>
+        <div class="step reveal"><div class="s">02</div><h3 data-i18n="step-2-h">الدراسة والمقابلة</h3><p data-i18n="step-2-p">مقابلة مع الفريق، دراسة الملاءة المالية، تقييم الموقع المقترح، ثم توقيع العقد لثلاث سنوات.</p></div>
+        <div class="step reveal"><div class="s">03</div><h3 data-i18n="step-3-h">التدريب والتجهيز</h3><p data-i18n="step-3-p">تدريب صاحب الامتياز والمدربين بالتوازي مع التصميم والتجهيز وفق مخططات ويبرو.</p></div>
+        <div class="step reveal"><div class="s">04</div><h3 data-i18n="step-4-h">الافتتاح</h3><p data-i18n="step-4-p">حملة افتتاح مشتركة، أول توريد من المحمصة، ودعم ميداني في الأسابيع الأولى.</p></div>
       </div>
     </div>
   </section>
@@ -357,12 +388,12 @@ form.sent .form-success{display:block}
   <!-- CLOSING CTA -->
   <section class="closing">
     <div class="wrap reveal">
-      <h2>جاهز تبدأ فرعك؟</h2>
-      <p>املأ النموذج ويتواصل معك فريق الامتياز خلال 48 ساعة عمل بالملف التعريفي الكامل.</p>
-      <a href="#apply" class="btn btn--primary">قدّم طلب الامتياز</a>
+      <h2 data-i18n="closing-h2">جاهز تبدأ فرعك؟</h2>
+      <p data-i18n="closing-p">املأ النموذج ويتواصل معك فريق الامتياز خلال 48 ساعة عمل بالملف التعريفي الكامل.</p>
+      <a href="#apply" class="btn btn--primary" data-i18n="closing-btn">قدّم طلب الامتياز</a>
       <div class="facts">
-        <span>المساحة المطلوبة: 150 م² تقريبًا</span>
-        <span>الشكل القانوني: شركة ذات مسؤولية محدودة</span>
+        <span data-i18n="fact-1">المساحة المطلوبة: 150 م² تقريبًا</span>
+        <span data-i18n="fact-2">الشكل القانوني: شركة ذات مسؤولية محدودة</span>
       </div>
     </div>
   </section>
@@ -371,19 +402,19 @@ form.sent .form-success{display:block}
 <footer class="site-footer">
   <div class="wrap">
     <div>
-      <div class="brand" style="color:#fff;margin-bottom:12px"><span class="mark">W</span> ويبرو</div>
-      <p>محمصة قهوة متخصصة — الخبر، المنطقة الشرقية، المملكة العربية السعودية. تأسست 2020.</p>
+      <div class="brand" style="color:#fff;margin-bottom:12px"><span class="mark">W</span> <span data-i18n="brand">ويبرو</span></div>
+      <p data-i18n="footer-about">محمصة قهوة متخصصة — الخبر، المنطقة الشرقية، المملكة العربية السعودية. تأسست 2020.</p>
     </div>
     <div>
-      <h4>تواصل معنا</h4>
+      <h4 data-i18n="footer-contact">تواصل معنا</h4>
       <ul>
         <li><a href="mailto:franchise@webrewroasters.com">franchise@webrewroasters.com</a></li>
         <li><a href="tel:+966598377646" dir="ltr">+966 59 837 7646</a></li>
-        <li>الخبر، المنطقة الشرقية</li>
+        <li data-i18n="footer-city">الخبر، المنطقة الشرقية</li>
       </ul>
     </div>
     <div>
-      <h4>تابعنا</h4>
+      <h4 data-i18n="footer-follow">تابعنا</h4>
       <ul>
         <li><a href="https://instagram.com/webrewroasters" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="https://x.com/webrewroasters" target="_blank" rel="noopener">X (Twitter)</a></li>
@@ -393,20 +424,167 @@ form.sent .form-success{display:block}
   </div>
   <div class="wrap footer-bottom">
     <span>© 2026 Webrew Coffee Roasters</span>
-    <span>جميع الطلبات تُدرس بسرّية.</span>
+    <span data-i18n="footer-confidential">جميع الطلبات تُدرس بسرّية.</span>
   </div>
 </footer>
 
-<div class="mobile-cta"><a href="#apply" class="btn btn--primary">قدّم طلب الامتياز</a></div>
+<div class="mobile-cta"><a href="#apply" class="btn btn--primary" data-i18n="closing-btn">قدّم طلب الامتياز</a></div>
 
 <script>
 (function(){
   "use strict";
 
-  /* ---- Google Sheets endpoint ----
-     Paste the Apps Script Web App URL here (see google-apps-script.gs).
-     Until it's set, the form shows the success screen but nothing is stored. */
-  var SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbyQr8eDG1JHR5fBoShDNXmDrEyhvgohleWhSIQcNMLBBPXKHYcRAlgixUvFWl72R-S7/exec";
+  /* ---- Bilingual (Arabic / English) content ----
+     Arabic text lives directly in the HTML above (default, no-JS-safe).
+     This dictionary supplies the English side; toggling swaps documentElement
+     lang/dir and the textContent/placeholder of every data-i18n[-ph] node. */
+  var EN = {
+    "brand": "Webrew",
+    "nav-about": "About",
+    "nav-why": "Why franchise",
+    "nav-process": "Process",
+    "apply-now": "Apply now",
+    "hero-eyebrow": "Franchise opportunity — Saudi Arabia",
+    "hero-h1": "Open your own Webrew coffee roastery & café",
+    "hero-lede": "A specialty coffee roastery from Khobar, supplying over 60 tons of roasted beans a year to more than 45 coffee shops. We're now opening the door to franchise partners: an established brand, an in-house roastery, and a proven operating model.",
+    "stat-1": "tons roasted annually",
+    "stat-2": "coffee shop partners",
+    "stat-3": "customers since 2020",
+    "stat-4": "coffee varieties",
+    "form-h2": "Submit your franchise application",
+    "form-hint": "Our franchise team will get back to you within 48 business hours with the information pack and next steps. All applications are treated confidentially.",
+    "label-name": "Full name",
+    "ph-name": "e.g. Abdullah Al-Shammari",
+    "err-name": "Please enter your full name.",
+    "label-phone": "Mobile number",
+    "err-phone": "Please enter a valid mobile number.",
+    "label-city": "City",
+    "ph-city": "e.g. Khobar",
+    "err-city": "Please enter your city.",
+    "label-budget": "Available investment range",
+    "opt-select": "Select investment range",
+    "opt-1": "Under SAR 850,000",
+    "opt-2": "SAR 850,000 – 1,200,000",
+    "opt-3": "SAR 1,200,000 – 2,000,000",
+    "opt-4": "Above SAR 2,000,000",
+    "err-budget": "Please select an investment range.",
+    "more-open": "+ Add email and message (optional)",
+    "more-close": "− Hide optional fields",
+    "label-email": "Email address",
+    "label-message": "Your message",
+    "ph-message": "Tell us about your experience and the location you have in mind",
+    "submit-app": "Submit application",
+    "submit-sending": "Sending…",
+    "form-note": "By submitting, you agree to be contacted by the Webrew team about this franchise opportunity.",
+    "success-h3": "We've received your application",
+    "success-p": "The franchise team will send you the information pack and next steps within 48 business hours. For anything urgent: franchise@webrewroasters.com",
+    "success-error-fallback": "There was a small hiccup sending your request. If you don't hear back within 48 hours, email us at franchise@webrewroasters.com",
+    "about-eyebrow": "About Webrew",
+    "about-h2": "Your local roaster, from bean to cup",
+    "about-p": "Webrew Roastery was founded in Khobar in 2020 to supply freshly roasted, Grade-A beans to coffee shops across Saudi Arabia and the Gulf. Each origin is roasted to a carefully curated profile that brings out its own character, and we work with farmers in a way that supports the sustainability of the coffee industry.",
+    "chip-1": "In-house roastery",
+    "chip-2": "Quality & authenticity",
+    "chip-3": "Roasted to order",
+    "about-img-alt": "Webrew roastery in Khobar",
+    "about-img-fallback": "Add a roastery photo at assets/roastery.jpg",
+    "why-eyebrow": "Why franchise with us",
+    "why-h2": "Don't start from zero — start from a model that works",
+    "why-1-h": "An established brand",
+    "why-1-p": "A complete visual identity and a reputation built with 45 partners and over 300,000 customers, with full trademark and brand-name usage rights.",
+    "why-2-h": "Training & ongoing support",
+    "why-2-p": "Two weeks of direct training for the franchisee and four to six weeks for trainers, with a full transfer of operating know-how for the life of the agreement.",
+    "why-3-h": "A ready roastery & supply chain",
+    "why-3-p": "Direct access to our roastery and 15 bean varieties with Webrew's exclusive profiles, on a regular roasting and delivery schedule.",
+    "why-4-h": "Marketing support",
+    "why-4-p": "Campaigns across Webrew's channels, digital and printed promotional material, and opening, partnership and local event plans.",
+    "why-5-h": "A proven business model",
+    "why-5-p": "Complete SOP manuals, outlet layouts and architectural designs, site evaluation, and a clear three-year financial model.",
+    "why-6-h": "Single unit or more",
+    "why-6-p": "Two franchise options are available: single-unit and multi-unit. The franchisee is required to set up a limited liability company under the Kingdom's regulations.",
+    "why-6-btn": "Talk to the franchise team",
+    "process-eyebrow": "The process",
+    "process-h2": "From application to opening in four steps",
+    "step-1-h": "Apply",
+    "step-1-p": "Fill in the form with your city and investment range, and we'll send you the franchise information pack.",
+    "step-2-h": "Review",
+    "step-2-p": "An interview with the team, a financial review, evaluation of your proposed site, then signing the three-year agreement.",
+    "step-3-h": "Training",
+    "step-3-p": "Training for the franchisee and trainers, alongside design and fit-out to Webrew's layouts.",
+    "step-4-h": "Launch",
+    "step-4-p": "A joint opening campaign, your first delivery from the roastery, and on-site support in the first weeks.",
+    "closing-h2": "Ready to start your branch?",
+    "closing-p": "Fill in the form and the franchise team will get back to you within 48 business hours with the full information pack.",
+    "closing-btn": "Submit your application",
+    "fact-1": "Space required: approx. 150 sq m",
+    "fact-2": "Legal structure: limited liability company",
+    "footer-about": "Specialty coffee roastery — Khobar, Eastern Province, Saudi Arabia. Founded 2020.",
+    "footer-contact": "Contact",
+    "footer-city": "Khobar, Eastern Province",
+    "footer-follow": "Follow",
+    "footer-confidential": "All applications are treated confidentially."
+  };
+
+  /* Arabic dictionary is captured live from the HTML on first load, so the
+     two files never drift apart — there is exactly one place each Arabic
+     string is authored: inline in the markup above. */
+  var AR = {};
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    var key = el.getAttribute('data-i18n');
+    if(!(key in AR)) AR[key] = el.textContent;
+  });
+  var AR_PH = {};
+  document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+    AR_PH[el.getAttribute('data-i18n-ph')] = el.placeholder;
+  });
+  var AR_ALT = {};
+  document.querySelectorAll('[data-i18n-alt]').forEach(function(el){
+    AR_ALT[el.getAttribute('data-i18n-alt')] = el.alt;
+  });
+  var EN_PH = { "ph-name": EN["ph-name"], "ph-city": EN["ph-city"], "ph-message": EN["ph-message"] };
+  var EN_ALT = { "about-img-alt": EN["about-img-alt"] };
+
+  function t(key){ return (lang === 'en' ? EN : AR)[key]; }
+
+  var lang = document.documentElement.lang === 'en' ? 'en' : 'ar';
+  var langToggle = document.getElementById('lang-toggle');
+
+  function applyLanguage(){
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    var dict = lang === 'en' ? EN : AR;
+    document.querySelectorAll('[data-i18n]').forEach(function(el){
+      var key = el.getAttribute('data-i18n');
+      if(key in dict) el.textContent = dict[key];
+    });
+    var phDict = lang === 'en' ? EN_PH : AR_PH;
+    document.querySelectorAll('[data-i18n-ph]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-ph');
+      if(key in phDict) el.placeholder = phDict[key];
+    });
+    var altDict = lang === 'en' ? EN_ALT : AR_ALT;
+    document.querySelectorAll('[data-i18n-alt]').forEach(function(el){
+      var key = el.getAttribute('data-i18n-alt');
+      if(key in altDict) el.alt = altDict[key];
+    });
+    if(langToggle){
+      langToggle.textContent = lang === 'ar' ? 'English' : 'عربي';
+      langToggle.setAttribute('aria-label', lang === 'ar' ? 'Switch to English' : 'التبديل إلى العربية');
+    }
+    var moreBtn = document.querySelector('[data-more]');
+    if(moreBtn){
+      var open = document.querySelector('.more-fields').hidden === false;
+      moreBtn.textContent = t(open ? 'more-close' : 'more-open');
+    }
+  }
+
+  if(langToggle){
+    langToggle.addEventListener('click', function(){
+      lang = lang === 'ar' ? 'en' : 'ar';
+      try{ localStorage.setItem('webrew-lang', lang); }catch(e){}
+      applyLanguage();
+    });
+  }
+  applyLanguage();
 
   /* reveal on scroll */
   var io = new IntersectionObserver(function(entries){
@@ -422,9 +600,14 @@ form.sent .form-success{display:block}
       var open = box.hidden;
       box.hidden = !open;
       moreBtn.setAttribute('aria-expanded', String(open));
-      moreBtn.textContent = open ? '− إخفاء الحقول الاختيارية' : '+ إضافة بريد إلكتروني ورسالة (اختياري)';
+      moreBtn.textContent = t(open ? 'more-close' : 'more-open');
     });
   }
+
+  /* ---- Google Sheets endpoint ----
+     Paste the Apps Script Web App URL here (see google-apps-script.gs).
+     Until it's set, the form shows the success screen but nothing is stored. */
+  var SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbyQr8eDG1JHR5fBoShDNXmDrEyhvgohleWhSIQcNMLBBPXKHYcRAlgixUvFWl72R-S7/exec";
 
   /* form */
   var form = document.getElementById('franchise-form');
@@ -459,12 +642,13 @@ form.sent .form-success{display:block}
     if(!validate()) return;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'جارٍ الإرسال…';
+    submitBtn.textContent = t('submit-sending');
 
     var data = new URLSearchParams();
     new FormData(form).forEach(function(val, key){ if(key !== 'company') data.append(key, val); });
     data.append('source', location.pathname + location.hash);
     data.append('submitted_at', new Date().toISOString());
+    data.append('lang', lang);
 
     function done(){ form.classList.add('sent'); form.scrollIntoView({behavior:'smooth', block:'center'}); }
 
@@ -475,7 +659,7 @@ form.sent .form-success{display:block}
           // network failed — still acknowledge, but nudge to email
           done();
           var p = form.querySelector('.form-success p');
-          if(p) p.textContent = 'حدث خطأ بسيط في الإرسال. لو ما وصلك رد خلال 48 ساعة، راسلنا على franchise@webrewroasters.com';
+          if(p) p.textContent = t('success-error-fallback');
         });
     } else {
       // endpoint not configured yet
